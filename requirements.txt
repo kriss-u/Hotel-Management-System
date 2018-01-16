@@ -1,8 +1,7 @@
-Django==2.0
-gunicorn==19.7.1
-dj-database-url==0.4.2
-psycopg2==2.7.3.2
-wheel==0.30.0
-whitenoise==3.3.1
-virtualenv==15.1.0
-pipenv==9.0.2
+Django
+gunicorn
+dj-database-url
+psycopg2
+wheel
+whitenoise
+virtualenv
