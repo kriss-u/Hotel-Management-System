@@ -10,14 +10,11 @@ name = "pypi"
 django = "*"
 gunicorn = "*"
 dj-database-url = "*"
-psycopg2 = "*"
+"psycopg2" = "*"
 whitenoise = "*"
 virtualenv = "*"
+django-heroku = "*"
+
 
 [dev-packages]
 
-
-
-[requires]
-
-python_version = "3.6"
