@@ -3,7 +3,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.shortcuts import render  # For displaying in template
-from django.views import generic  # For ListView and DetailView
+from django.views import generic
+
 from .models import Room, Reservation, Customer, Staff  # Import Models
 
 
@@ -18,7 +19,8 @@ def index(request):
     total_num_reservations = Reservation.objects.all().count()
     total_num_staffs = Staff.objects.all().count()
     total_num_customers = Customer.objects.all().count()
-    last_reserved_by = Reservation.objects.order_by('-reservation_date_time').all()[0]
+    last_reserved_by = Reservation.objects.order_by('-reservation_date_time')[0:1]
+
     return render(
         request,
         'index.html',
