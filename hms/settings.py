@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 's5rdh$7wemmtef  # pror9m%3zcbb
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = os.environ.get('DJANGO_DEBUG', True)
 
 ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1']
 
@@ -128,8 +128,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-SECURE_SSL_REDIRECT = bool(os.environ.get('DJANGO_SECURE', False))
-SESSION_COOKIE_SECURE = bool(os.environ.get('DJANGO_SECURE', False))
-CSRF_COOKIE_SECURE = bool(os.environ.get('DJANGO_SECURE', False))
-SECURE_PROXY_SSL_HEADER = True
-SECURE_BROWSER_XSS_FILTER = True
+SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE', False)
+SESSION_COOKIE_SECURE = os.environ.get('DJANGO_SECURE', False)
+CSRF_COOKIE_SECURE = os.environ.get('DJANGO_SECURE', False)
+SECURE_PROXY_SSL_HEADER = os.environ.get('DJANGO_SECURE', False)
+SECURE_BROWSER_XSS_FILTER = os.environ.get('DJANGO_SECURE', False)
