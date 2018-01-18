@@ -131,5 +131,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE', False)
 SESSION_COOKIE_SECURE = os.environ.get('DJANGO_SECURE', False)
 CSRF_COOKIE_SECURE = os.environ.get('DJANGO_SECURE', False)
-SECURE_PROXY_SSL_HEADER = os.environ.get('DJANGO_SECURE', False)
-SECURE_BROWSER_XSS_FILTER = os.environ.get('DJANGO_SECURE', False)
+# SECURE_PROXY_SSL_HEADER = os.environ.get('DJANGO_SECURE', False)
+# SECURE_BROWSER_XSS_FILTER = os.environ.get('DJANGO_SECURE', False)
