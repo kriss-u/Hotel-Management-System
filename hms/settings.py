@@ -128,8 +128,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-SECURE_SSL_REDIRECT = bool(os.environ.get('DJANGO_SECURE_', False))
-SESSION_COOKIE_SECURE = bool(os.environ.get('DJANGO_SECURE_', False))
-CSRF_COOKIE_SECURE = bool(os.environ.get('DJANGO_SECURE_', False))
+SECURE_SSL_REDIRECT = bool(os.environ.get('DJANGO_SECURE', False))
+SESSION_COOKIE_SECURE = bool(os.environ.get('DJANGO_SECURE', False))
+CSRF_COOKIE_SECURE = bool(os.environ.get('DJANGO_SECURE', False))
 SECURE_PROXY_SSL_HEADER = True
 SECURE_BROWSER_XSS_FILTER = True
