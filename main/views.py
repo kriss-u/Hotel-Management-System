@@ -2,10 +2,12 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.http import Http404
-from django.shortcuts import render  # For displaying in template
+from django.shortcuts import render, redirect  # For displaying in template
 from django.views import generic
-
+from .forms import Signup
 from .models import Room, Reservation, Customer, Staff  # Import Models
+from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 
 def index(request):
@@ -13,7 +15,7 @@ def index(request):
     This is the view for homepage.
     This is a function based view.
     """
-    page_title = "Hotel Management System"  # For page title as well as heading
+    page_title = _("Hotel Management System")  # For page title as well as heading
     total_num_rooms = Room.objects.all().count()
     available_num_rooms = Room.objects.exclude(reservation__isnull=False).count()
     total_num_reservations = Reservation.objects.all().count()
@@ -40,6 +42,29 @@ def index(request):
     )
 
 
+def signup(request):
+    if request.method == 'POST':
+        form = Signup(request.POST)
+        if form.is_valid():
+            form.save()
+            staff_id = form.cleaned_data['staff_id']
+            username = form.cleaned_data['username']
+            s = Staff.objects.get(staff_id__exact=staff_id)
+            s.user = User.objects.get(username__iexact=username)
+            s.save()
+
+            return redirect('index')
+
+    else:
+        form = Signup()
+
+    return render(
+        request,
+        'signup.html',
+        {'form': form, },
+    )
+
+
 # For generic ListView or DetailView, the default templates should be stored in templates/{{app_name}}/{{template_name}}
 # By default template_name = modelName_list || modelName_detail.
 # eg room_list, room_detail
@@ -51,7 +76,7 @@ class RoomListView(PermissionRequiredMixin, generic.ListView):
     """
     model = Room  # Chooses the model for listing objects
     paginate_by = 5  # By how many objects this has to be paginated
-    title = "Room List"  # This is used for title and heading
+    title = _("Room List")  # This is used for title and heading
     permission_required = 'main.can_view_room'
 
     # By default only objects of the model are sent as context
@@ -75,7 +100,7 @@ class RoomListView(PermissionRequiredMixin, generic.ListView):
         try:
             new_context = Room.objects.filter(availability__in=[filter_value, 1])
         except ValidationError:
-            raise Http404("Wrong filter argument given.")
+            raise Http404(_("Wrong filter argument given."))
         return new_context
 
     def get_context_data(self, **kwargs):
@@ -91,7 +116,7 @@ class RoomDetailView(PermissionRequiredMixin, generic.DetailView):
     """
     # The remaining are same as previous.
     model = Room
-    title = "Room Information"
+    title = _("Room Information")
     permission_required = 'main.can_view_room'
     extra_context = {'title': title}
 
@@ -105,7 +130,7 @@ class ReservationListView(PermissionRequiredMixin, generic.ListView):
     # queryset field selects the objects to be displayed by the query.
     # Here, the objects are displayed by reservation date time in descending order
     queryset = Reservation.objects.all().order_by('-reservation_date_time')
-    title = "Reservation List"
+    title = _("Reservation List")
     paginate_by = 3
     permission_required = 'main.can_view_reservation'
     extra_context = {'title': title}
@@ -117,7 +142,7 @@ class ReservationDetailView(PermissionRequiredMixin, generic.DetailView):
     Implements generic DetailView
     """
     model = Reservation
-    title = "Reservation Information"
+    title = _("Reservation Information")
     permission_required = 'main.can_view_reservation'
     raise_exception = True
     extra_context = {'title': title}
@@ -129,7 +154,7 @@ class CustomerDetailView(PermissionRequiredMixin, generic.DetailView):
     Implements generic DetailView
     """
     model = Customer
-    title = "Customer Information"
+    title = _("Customer Information")
     permission_required = 'main.can_view_customer'
     raise_exception = True
     extra_context = {'title': title}
@@ -141,6 +166,6 @@ class StaffDetailView(PermissionRequiredMixin, generic.DetailView):
     Implements generic DetailView
     """
     model = Staff
-    title = "Staff Information"
+    title = _("Staff Information")
     permission_required = 'main.can_view_staff_detail'
     extra_context = {'title': title}

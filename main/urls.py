@@ -9,6 +9,7 @@ urlpatterns = [
     # to solve this, use the value from name field. for above example use
     # href="{% url 'index' %}
     path('', views.index, name='index'),
+    path('signup/', views.signup, name='signup'),
     path('rooms/', views.RoomListView.as_view(), name='rooms'),  # List of Rooms
     path('reservations/', views.ReservationListView.as_view(), name='reservations'),  # List of Reservations
     # <int:pk> takes the argument sent in urls.
