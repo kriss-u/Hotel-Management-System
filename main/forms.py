@@ -16,16 +16,96 @@ class Signup(forms.Form):
         'username_exists': _("The username already exists."),
         'staff_username_exists': _("This staff already has an account please login to it."),
     }
-    staff_id = forms.IntegerField(label='ID')
-    first_name = forms.CharField(label=_("First Name"), max_length=50)
-    middle_name = forms.CharField(label=_('Middle Name'), required=False, max_length=50)
-    last_name = forms.CharField(label=_("Last Name"), max_length=50)
-    contact_no = forms.CharField(label=_('Contact No'), max_length=15)
-    email = forms.EmailField(label=_("Email"), max_length=50)
-    username = forms.CharField(label=_("Username"), max_length=32)
-    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput,
-                                help_text=_("Enter the same password as above, for verification."))
+
+    staff_id = forms.IntegerField(
+        label=_('ID'),
+        help_text=_("Enter your staff ID"),
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your ID'),
+            }
+        )
+    )
+    first_name = forms.CharField(
+        label=_("First Name"),
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your first name'),
+            }
+        )
+    )
+    middle_name = forms.CharField(
+        label=_('Middle Name'),
+        required=False,
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your middle name'),
+            }
+        )
+    )
+    last_name = forms.CharField(
+        label=_("Last Name"),
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your last name'),
+            }
+        )
+    )
+    contact_no = forms.CharField(
+        label=_('Contact No'),
+        max_length=15,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your contact number'),
+            }
+        )
+    )
+    email = forms.EmailField(
+        label=_("Email"),
+        max_length=50,
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Enter your email'),
+            }
+        )
+    )
+    username = forms.CharField(
+        label=_("Username"),
+        max_length=32,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Username'),
+            }
+        )
+    )
+    password1 = forms.CharField(
+        label=_("Password"),
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Password')
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': _('Confirm Password')
+            }
+        ),
+        help_text=_("Enter the same password as above, for verification."))
 
     def clean(self):
         staff_id = self.cleaned_data.get('staff_id')
@@ -34,7 +114,7 @@ class Signup(forms.Form):
         last_name = self.cleaned_data.get('last_name')
         contact_no = self.cleaned_data.get('contact_no')
         email = self.cleaned_data.get('email')
-        username = self.cleaned_data.get('username').lower()
+        username = self.cleaned_data.get('username')
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         s = Staff.objects.filter(staff_id__exact=staff_id)
@@ -71,10 +151,9 @@ class Signup(forms.Form):
 
     def save(self):
         user = User.objects.create(
-            username=self.cleaned_data['username'].lower(),
-            password=self.cleaned_data['password1'],
-            first_name=self.cleaned_data['first_name'].title(),
-            last_name=self.cleaned_data['last_name'].title(),
-            email=self.cleaned_data['email'].lower(),
+            username=self.cleaned_data['username'],
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            email=self.cleaned_data['email'],
         )
         return user

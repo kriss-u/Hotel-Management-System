@@ -66,3 +66,22 @@ h1 {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
 }
+
+/* Forms */
+.fieldset {
+    border: 5px groove darkgrey !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+}
+
+.legend {
+    width: auto;
+    border: none;
+    padding: 5px 5px 5px 5px;
+}
+
+.notMatched{
+    font-weight: bold;
+    font-size: 2rem;
+    color: #a41515;
+}

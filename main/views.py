@@ -1,13 +1,14 @@
 # from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.shortcuts import render, redirect  # For displaying in template
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
+
 from .forms import Signup
 from .models import Room, Reservation, Customer, Staff  # Import Models
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
 
 
 def index(request):
@@ -43,6 +44,8 @@ def index(request):
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        request.session.flush()
     if request.method == 'POST':
         form = Signup(request.POST)
         if form.is_valid():
@@ -51,6 +54,10 @@ def signup(request):
             username = form.cleaned_data['username']
             s = Staff.objects.get(staff_id__exact=staff_id)
             s.user = User.objects.get(username__iexact=username)
+            s.user.set_password(form.cleaned_data['password1'])
+            staffs_group = Group.objects.get(name__iexact="Staffs")
+            s.user.groups.add(staffs_group)
+            s.user.save()
             s.save()
 
             return redirect('index')
