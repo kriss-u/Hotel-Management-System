@@ -176,8 +176,10 @@
 <script src="https://use.fontawesome.com/c76346d885.js"></script>
 <script>
     $(window).on("load", function () {
-        $("input[type!='submit']").addClass("form-control");
-        $("input[type='submit']").addClass("btn btn-primary")
+        if ($("form")) {
+            $("input[type!='submit']").addClass("form-control");
+            $("input[type='submit']").addClass("btn btn-primary")
+        }
     });
 </script>
 </body>
