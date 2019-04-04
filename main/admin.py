@@ -32,7 +32,7 @@ class StaffAdmin(admin.ModelAdmin):
     # Categorizing the fields
     fieldsets = (
         (None, {
-            'fields': (('first_name', 'middle_name', 'last_name'),)
+            'fields': ('profile_picture', ('first_name', 'middle_name', 'last_name'),)
         }),
         ('Contact Information', {
             'fields': (('contact_no', 'email_address'), 'address')
@@ -96,6 +96,7 @@ class RoomAdmin(admin.ModelAdmin):
     )
     # Adding filter
     list_filter = ('room_type', 'availability')
+    filter_horizontal = ('facility',)
     fields = (('room_no', 'room_type'), 'reservation', 'facility')
     search_fields = [
         'reservation__customer__first_name',
@@ -106,4 +107,9 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(Facility)
 class FacilityAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'price')
+
+
+@admin.register(RoomType)
+class RoomTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price')

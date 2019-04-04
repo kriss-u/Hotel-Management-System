@@ -8,6 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 @python_2_unicode_compatible
 class Staff(models.Model):
     """ Model for staffs """
+    profile_picture = models.ImageField(upload_to='staff_img/', default='images/staff.png')
     staff_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, null=False, blank=True)
@@ -77,19 +78,10 @@ class Reservation(models.Model):
 
 @python_2_unicode_compatible
 class Room(models.Model):
-    SIMPLE = 'SM'
-    DELUXE = 'DX'
-    PREMIUM = 'PM'
-    ROOM_CHOICES = (
-        (SIMPLE, 'Simple'),
-        (DELUXE, 'Deluxe'),
-        (PREMIUM, 'Premium')
-    )
-
     room_no = models.CharField(max_length=10, primary_key=True)
-    room_type = models.CharField(max_length=2, choices=ROOM_CHOICES, default=SIMPLE)
+    room_type = models.ForeignKey('RoomType', null=False, blank=True, on_delete=models.CASCADE)
     availability = models.BooleanField(default=0)
-    reservation = models.ForeignKey(Reservation, null=True, blank=True, on_delete=models.CASCADE)
+    reservation = models.ForeignKey(Reservation, null=True, blank=True, on_delete=models.SET_NULL)
     facility = models.ManyToManyField('Facility')
 
     class Meta:
@@ -97,7 +89,7 @@ class Room(models.Model):
         permissions = (('can_view_room', 'Can view room'),)
 
     def __str__(self):
-        return self.room_no
+        return "%s - %s - Rs. %i" % (self.room_no, self.room_type.name, self.room_type.price)
 
     def display_facility(self):
         """
@@ -122,10 +114,21 @@ class Room(models.Model):
 
 @python_2_unicode_compatible
 class Facility(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=25)
+    price = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name_plural = 'Facilities'  # Otherwise admin panel shows Facilitys
 
     def __str__(self):
         return self.name
+
+
+@python_2_unicode_compatible
+class RoomType(models.Model):
+    name = models.CharField(max_length=25)
+    price = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.name
+

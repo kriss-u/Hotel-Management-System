@@ -1,3 +1,4 @@
+{% load i18n %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,9 +11,12 @@
     <title>{{ title }}</title>
     <!-- --------------------- -->
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
-          integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
     <!-- --------------Custom styles-------------------------------- -->
     {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
@@ -24,7 +28,8 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <!-- --------------Navigation Bar--------------------- -->
-        <a class="navbar-brand" href="{% url 'index' %}">Hotel Management System</a>
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <img src="{% static "/img/hotel-fav-icon.png" %}" style="width:50px; height=50px; padding:5px;">Hotel Management System</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
                 data-target="#top_navbar" aria-controls="top_navbar" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -35,9 +40,11 @@
             <ul class="navbar-nav">
                 <!-- -------------------Navigation Items--------------- -->
                 {% block navbar-items %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Help</a>
                     </li>
@@ -62,22 +69,33 @@
                                 Status</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'reservations' %}">Reservations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Guests</a>
+                            <a class="nav-link" href="{% url 'guest-list' %}">Guests</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'rooms' %}">Rooms</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">To Do</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Checkout</a>
+                            <a class="nav-link" href="{% url 'payment-index' %}">Payments</a>
                         </li>
                     </ul>
-
+                    {% if user.is_authenticated %}
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'reserve' %}">Reserve</a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'reservations' %}">Reservations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'check_in-list' %}">Check-ins</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'check_out-list' %}">Check-outs</a>
+                            </li>
+                        </ul>
+                    {% endif %}
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
                             <a class="nav-link" href="#">Customer Feedback</a>
@@ -108,7 +126,8 @@
         <!-- ---------------------------------------------------------------------------- -->
 
         <!-- -------------------------Main Body Content---------------------- -->
-        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3"
+              style="background: linear-gradient(to right, lightblue, lightyellow)">
             <!-- ---------Content Heading----------- -->
             {% block content-title %}
                 <h1>{{ title }}</h1>
@@ -163,10 +182,6 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
@@ -174,6 +189,10 @@
         integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
         crossorigin="anonymous"></script>
 <script src="https://use.fontawesome.com/c76346d885.js"></script>
+{% load static %}
+<script src="{% static 'js/script.js' %}"></script>
+{% block media-files %}
+{% endblock %}
 <script>
     $(window).on("load", function () {
         if ($("form")) {
@@ -182,5 +201,7 @@
         }
     });
 </script>
+{% block additional-javascript %}
+{% endblock %}
 </body>
 </html>

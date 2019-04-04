@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 
-import dj_database_url
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,14 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '(s5rdh$7wemmtef#pror9m%3zcbb*9apisqh9_us*gu^5chm_a'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 's5rdh$7wemmtef  # pror9m%3zcbb*9apisqh9_us*gu^5chm_a')
+SECRET_KEY = '(s5rdh$7wemmtef#pror9m%3zcbb*9apisqh9_us*gu^5chm_a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = True
 
-ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -40,11 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
+    'payment.apps.PaymentConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,6 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -80,6 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ATOMIC_REQUESTS': True,
     }
 }
 
@@ -116,21 +114,15 @@ USE_TZ = True
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
-
+LOGOUT_REDIRECT_URL = '/'
 # For password reset
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# For session expire
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
-
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE', False)
-SESSION_COOKIE_SECURE = os.environ.get('DJANGO_SECURE', False)
-CSRF_COOKIE_SECURE = os.environ.get('DJANGO_SECURE', False)
-# SECURE_PROXY_SSL_HEADER = os.environ.get('DJANGO_SECURE', False)
-# SECURE_BROWSER_XSS_FILTER = os.environ.get('DJANGO_SECURE', False)
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
